@@ -11,20 +11,15 @@ class App {
     path = [];
     startNode = {};
     goalNode = {};
-    wallNodes = [];
 
     colors = {board: '#EAE7E1', startNode: '#214ECA', goalNode: '#E52E2E', adjacent: '#00A30E', explored: '#878787', path: '#6CA1DA'};
 
     constructor(startNode, goalNode) {
         // Clear canvas
-        console.log(startNode);
         this.clearCanvas();
 
         this.reachable.push({current: startNode, previous: {}});
         this.goalNode = goalNode;
-
-        this.context.fillStyle = this.colors.board;
-        this.context.fillRect(this.mapPadding, this.mapPadding, this.mapWidth, this.mapHeight);
 
         this.fillNode(startNode, this.colors.startNode);
         this.fillNode(goalNode, this.colors.goalNode);
@@ -41,7 +36,6 @@ class App {
             document.body.style.cursor = 'default';
         };
         */
-
         const self = this;
         this.canvas.addEventListener('click', function(e) {
             console.log(self.getMousePos(e));
@@ -59,14 +53,13 @@ class App {
         let i = 0;
         while (this.reachable.length) {
             await wait();
-            let nodeData = this.chooseNode();
-            let node = nodeData.current;
-            // Found the goal node, return the path. The ORDER of the properties IS IMPORTANT
+            let nodeData = this.chooseNode(),
+                node = nodeData.current;
+
             if ( App.areObjectsEqual(node, this.goalNode)) {
                 App.disableControls(false);
                 return this.buildPath(nodeData);
             }
-            // TODO: check no path
             this.explored.push({current: node, previous: nodeData.previous, direction: nodeData.direction});
             document.querySelector('.breadth-search-container .explored .explored-list').innerHTML = JSON.stringify(this.explored);
 
@@ -127,6 +120,7 @@ class App {
     }
 
     buildPath(node) {
+        this.path.push(this.goalNode);
         while (node) {
             let prevNode = this.explored.find((e) => App.areObjectsEqual(e.current, node.previous));
             if (prevNode == null) {
@@ -173,11 +167,10 @@ class App {
 
     getMousePos(evt) {
         var rect = this.canvas.getBoundingClientRect();
-        let x = evt.clientX - rect.left;
-        let y = evt.clientY - rect.top;
+        let x = evt.clientX - rect.left,
+            y = evt.clientY - rect.top;
 
         let ceil = {x: Math.ceil((x-this.mapPadding)/this.cellSize), y: Math.ceil((y-this.mapPadding)/this.cellSize)};
-        console.log(ceil);
         return {x, y};
     }
 
@@ -194,6 +187,8 @@ class App {
 
     clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = this.colors.board;
+        this.context.fillRect(this.mapPadding, this.mapPadding, this.mapWidth, this.mapHeight);
         document.querySelector('.breadth-search-container .path .path-list').innerHTML = '...';
     }
 
@@ -206,7 +201,6 @@ class App {
         document.querySelector('#start-button').disabled = disabled;
     }
 }
-
 
 function start() {
     let x_start = parseInt(document.getElementById('x_start').value),
