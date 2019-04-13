@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grid</title>
+    <script src="app.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="css/app.css" >
+</head>
+<body>
+<div class="wrapper">
+    <div class="breadth-search-container">
+        <div class="breadth-search-canvas">
+            <canvas id="canvas" width="520px" height="520px"></canvas>
+            <div class="container">
+                <div class="column column-center">
+                    <div>Start Node:</div>
+                    <div>Goal node:</div>
+                </div>
+                <div class="column column-left">
+                    <div>X <input type="text" value="4" id="x_start" maxlength="2"> Y <input type="text" value="5" id="y_start" maxlength="2"></div>
+                    <div>X <input type="text" value="9" id="x_goal" maxlength="2"> Y <input type="text" value="11" id="y_goal" maxlength="2"></div>
+                </div>
+                <div class="column column-right">
+                    <input type="button" value="Run" id="start-button" onclick="start()">
+                </div>
+            </div>
+
+
+        </div>
+        <div class="search-info">
+            <div class="path">
+                <p>
+                    <span><b>Path</b>: </span>
+                    <span class="path-list">...</span>
+                </p>
+            </div>
+            <div class="reachable">
+                <p>
+                    <span><b>Reachable</b>: </span>
+                    <span class="reachable-list">...</span>
+                </p>
+            </div>
+            <div class="explored">
+                <span><b>Explored</b>: </span>
+                <span class="explored-list">...</span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

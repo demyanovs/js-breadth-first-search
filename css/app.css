@@ -1,0 +1,48 @@
+.wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.breadth-search-canvas {
+    display: table;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    float: left
+}
+
+.search-info {
+    display: inline-block;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.column {
+    padding-left: 10px;
+}
+
+.column-one {
+    order: 1;
+}
+.column-two {
+    order: 2;
+}
+.column-three {
+    order: 3;
+}
+.column-four  {
+    order: 4;
+}
+
+.breadth-search-container input[type="text"] {
+    width: 20px;
+    padding: 2px;
+}
+
+.breadth-search-container input[type="button"] {
+    padding: 15px;
+}
