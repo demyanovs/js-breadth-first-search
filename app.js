@@ -11,8 +11,9 @@ class App {
     path = [];
     startNode = {};
     goalNode = {};
+    wallNodes = [{x: 7, y: 5}, {x: 7, y: 6}, {x: 7, y: 7}, {x: 7, y: 8}, {x: 8, y: 8}, {x: 9, y: 8}, {x: 10, y: 8}, {x: 8, y:5}];
 
-    colors = {board: '#EAE7E1', startNode: '#214ECA', goalNode: '#E52E2E', adjacent: '#00A30E', explored: '#878787', path: '#6CA1DA'};
+    colors = {board: '#EAE7E1', startNode: '#214ECA', goalNode: '#E52E2E', adjacent: '#00A30E', explored: '#878787', path: '#6CA1DA', wall: '#993A15'};
 
     constructor(startNode, goalNode) {
         // Clear canvas
@@ -26,6 +27,7 @@ class App {
         this.context.fillStyle = 'black';
 
         this.drawBoard();
+        this.drawWalls();
         this.findPath();
         App.disableControls(true);
         /*
@@ -38,7 +40,7 @@ class App {
         */
         const self = this;
         this.canvas.addEventListener('click', function(e) {
-            console.log(self.getMousePos(e));
+            //console.log(self.getMousePos(e));
         }, false);
     }
 
@@ -81,27 +83,27 @@ class App {
     }
 
     getAdjacents(node, previousNode) {
-        if (node.x - 1 > 0) {
+        if (node.x - 1 > 0 ) { //!this.wallNodes.includes(node)
             let adjacentNode = {x: node.x - 1, y: node.y};
-            if (!this.isExplored(adjacentNode)) {
+            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
                 if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
                     this.fillNode(adjacentNode, this.colors.adjacent);
                 }
                 this.reachable.push({current: adjacentNode, previous: node});
             }
         }
-        if (node.x + 1 <= this.mapWidth / this.cellSize) {
+        if (node.x + 1 <= this.mapWidth / this.cellSize ) {
             let adjacentNode = {x: node.x + 1, y: node.y};
-            if (!this.isExplored(adjacentNode)) {
+            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
                 if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
                     this.fillNode(adjacentNode, this.colors.adjacent);
                 }
                 this.reachable.push({current: adjacentNode, previous: node});
             }
         }
-        if (node.y - 1 > 0) {
+        if (node.y - 1 > 0 ) {
             let adjacentNode = {x: node.x, y: node.y - 1};
-            if (!this.isExplored(adjacentNode)) {
+            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
                 if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
                     this.fillNode(adjacentNode, this.colors.adjacent);
                 }
@@ -110,7 +112,7 @@ class App {
         }
         if (node.y + 1 <= this.mapHeight / this.cellSize) {
             let adjacentNode = {x: node.x, y: node.y + 1};
-            if (!this.isExplored(adjacentNode)) {
+            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
                 if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
                     this.fillNode(adjacentNode, this.colors.adjacent);
                 }
@@ -165,6 +167,12 @@ class App {
         this.context.stroke();
     }
 
+    drawWalls() {
+        for (let node of this.wallNodes) {
+            this.fillNode(node, this.colors.wall);
+        }
+    }
+
     getMousePos(evt) {
         var rect = this.canvas.getBoundingClientRect();
         let x = evt.clientX - rect.left,
@@ -199,6 +207,15 @@ class App {
     static disableControls(disabled = true)
     {
         document.querySelector('#start-button').disabled = disabled;
+    }
+
+    static isIncludeObject(array, obj) {
+        for(let i = 0; i < array.length; i++) {
+            if (App.areObjectsEqual(array[i], obj)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
