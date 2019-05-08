@@ -30,18 +30,6 @@ class App {
         this.drawWalls();
         this.findPath();
         App.disableControls(true);
-        /*
-        this.canvas.onmouseover = function (e) {
-            document.body.style.cursor = 'pointer';
-        };
-        this.canvas.onmouseout = function (e) {
-            document.body.style.cursor = 'default';
-        };
-        */
-        const self = this;
-        this.canvas.addEventListener('click', function(e) {
-            //console.log(self.getMousePos(e));
-        }, false);
     }
 
     async findPath() {
@@ -70,7 +58,7 @@ class App {
             }
 
             // Where can we get from here?
-            this.getAdjacents(node, previousNode);
+            this.getAdjacent(node, previousNode);
             document.querySelector('.breadth-search-container .reachable .reachable-list').innerHTML = JSON.stringify(this.reachable);
 
             previousNode = node;
@@ -82,43 +70,30 @@ class App {
         return this.reachable.shift();
     }
 
-    getAdjacents(node, previousNode) {
+    getAdjacent(node, previousNode) {
+        let adjacentNodes = [];
         if (node.x - 1 > 0 ) { //!this.wallNodes.includes(node)
-            let adjacentNode = {x: node.x - 1, y: node.y};
-            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
-                if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
-                    this.fillNode(adjacentNode, this.colors.adjacent);
-                }
-                this.reachable.push({current: adjacentNode, previous: node});
-            }
+            adjacentNodes.push({x: node.x - 1, y: node.y});
         }
         if (node.x + 1 <= this.mapWidth / this.cellSize ) {
-            let adjacentNode = {x: node.x + 1, y: node.y};
-            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
-                if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
-                    this.fillNode(adjacentNode, this.colors.adjacent);
-                }
-                this.reachable.push({current: adjacentNode, previous: node});
-            }
+            adjacentNodes.push({x: node.x + 1, y: node.y});
         }
         if (node.y - 1 > 0 ) {
-            let adjacentNode = {x: node.x, y: node.y - 1};
-            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
-                if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
-                    this.fillNode(adjacentNode, this.colors.adjacent);
-                }
-                this.reachable.push({current: adjacentNode, previous: node});
-            }
+            adjacentNodes.push({x: node.x, y: node.y - 1});
         }
         if (node.y + 1 <= this.mapHeight / this.cellSize) {
-            let adjacentNode = {x: node.x, y: node.y + 1};
-            if (!this.isExplored(adjacentNode) && !App.isIncludeObject(this.wallNodes, adjacentNode)) {
-                if (!App.areObjectsEqual(adjacentNode, this.goalNode)) {
-                    this.fillNode(adjacentNode, this.colors.adjacent);
-                }
-                this.reachable.push({current: adjacentNode, previous: node});
-            }
+            adjacentNodes.push({x: node.x, y: node.y + 1});
         }
+
+        const self = this;
+        adjacentNodes.forEach( (adjacentNode) => {
+            if (!self.isExplored(adjacentNode) && !App.isIncludeObject(self.wallNodes, adjacentNode)) {
+                if (!App.areObjectsEqual(adjacentNode, self.goalNode)) {
+                    self.fillNode(adjacentNode, self.colors.adjacent);
+                }
+                self.reachable.push({current: adjacentNode, previous: node});
+            }
+        });
     }
 
     buildPath(node) {
@@ -150,7 +125,6 @@ class App {
                 i++;
             }
         }
-
         // vertical
         i = 1;
         for (let x = 0; x <= this.mapWidth; x += this.cellSize) {
@@ -171,15 +145,6 @@ class App {
         for (let node of this.wallNodes) {
             this.fillNode(node, this.colors.wall);
         }
-    }
-
-    getMousePos(evt) {
-        var rect = this.canvas.getBoundingClientRect();
-        let x = evt.clientX - rect.left,
-            y = evt.clientY - rect.top;
-
-        let ceil = {x: Math.ceil((x-this.mapPadding)/this.cellSize), y: Math.ceil((y-this.mapPadding)/this.cellSize)};
-        return {x, y};
     }
 
     fillNode(node, color) {
