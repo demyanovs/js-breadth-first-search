@@ -1,4 +1,4 @@
-class App {
+class BFS {
     mapWidth = 480;
     mapHeight = 480;
     mapPadding = 20;
@@ -19,6 +19,7 @@ class App {
         // Clear canvas
         this.clearCanvas();
 
+        // Add start node
         this.reachable.push({current: startNode, previous: {}});
         this.goalNode = goalNode;
 
@@ -29,25 +30,20 @@ class App {
         this.drawBoard();
         this.drawWalls();
         this.findPath();
-        App.disableControls(true);
+        BFS.disableControls(true);
     }
 
     async findPath() {
-        async function wait() {
-            return new Promise(function(resolve) {
-                setTimeout(resolve, 10);
-            });
-        }
-
         let previousNode = {};
         let i = 0;
         while (this.reachable.length) {
-            await wait();
+            // Slow down the search to visualize it
+            await BFS.wait();
             let nodeData = this.chooseNode(),
                 node = nodeData.current;
 
-            if ( App.areObjectsEqual(node, this.goalNode)) {
-                App.disableControls(false);
+            if ( BFS.areObjectsEqual(node, this.goalNode)) {
+                BFS.disableControls(false);
                 return this.buildPath(nodeData);
             }
             this.explored.push({current: node, previous: nodeData.previous, direction: nodeData.direction});
@@ -87,8 +83,8 @@ class App {
 
         const self = this;
         adjacentNodes.forEach( (adjacentNode) => {
-            if (!self.isExplored(adjacentNode) && !App.isIncludeObject(self.wallNodes, adjacentNode)) {
-                if (!App.areObjectsEqual(adjacentNode, self.goalNode)) {
+            if (!self.isExplored(adjacentNode) && !BFS.isIncludeObject(self.wallNodes, adjacentNode)) {
+                if (!BFS.areObjectsEqual(adjacentNode, self.goalNode)) {
                     self.fillNode(adjacentNode, self.colors.adjacent);
                 }
                 self.reachable.push({current: adjacentNode, previous: node});
@@ -99,7 +95,7 @@ class App {
     buildPath(node) {
         this.path.push(this.goalNode);
         while (node) {
-            let prevNode = this.explored.find((e) => App.areObjectsEqual(e.current, node.previous));
+            let prevNode = this.explored.find((e) => BFS.areObjectsEqual(e.current, node.previous));
             if (prevNode == null) {
                 break;
             }
@@ -154,8 +150,8 @@ class App {
     }
 
     isExplored(node) {
-        return (this.reachable.filter(e => App.areObjectsEqual(e.current, node)).length > 0 ||
-            this.explored.filter(e => App.areObjectsEqual(e.current, node)).length > 0)
+        return (this.reachable.filter(e => BFS.areObjectsEqual(e.current, node)).length > 0 ||
+            this.explored.filter(e => BFS.areObjectsEqual(e.current, node)).length > 0)
     }
 
     clearCanvas() {
@@ -176,11 +172,17 @@ class App {
 
     static isIncludeObject(array, obj) {
         for(let i = 0; i < array.length; i++) {
-            if (App.areObjectsEqual(array[i], obj)) {
+            if (BFS.areObjectsEqual(array[i], obj)) {
                 return true;
             }
         }
         return false;
+    }
+
+    static wait() {
+        return new Promise(function(resolve) {
+            setTimeout(resolve, 10);
+        });
     }
 }
 
@@ -189,10 +191,9 @@ function start() {
         y_start = parseInt(document.getElementById('y_start').value),
         x_goal = parseInt(document.getElementById('x_goal').value),
         y_goal = parseInt(document.getElementById('y_goal').value);
-    const map = new App({x: x_start,y: y_start}, {x: x_goal, y: y_goal});
+    const map = new BFS({x: x_start,y: y_start}, {x: x_goal, y: y_goal});
 }
 
-
 window.addEventListener("load", () => {
-    const map = new App({x: 4,y: 5}, {x: 9, y: 11});
+    const map = new BFS({x: 4,y: 5}, {x: 9, y: 11});
 });
