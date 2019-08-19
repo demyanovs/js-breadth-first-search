@@ -54,8 +54,7 @@ class BFS {
             }
 
             // Where can we get from here?
-            this.
-            (node);
+            this.getAdjacent(node);
             document.querySelector('.breadth-search-container .reachable .reachable-list').innerHTML = JSON.stringify(this.reachable);
 
             previousNode = node;
