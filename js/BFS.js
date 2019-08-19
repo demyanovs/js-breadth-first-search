@@ -54,7 +54,8 @@ class BFS {
             }
 
             // Where can we get from here?
-            this.getAdjacent(node, previousNode);
+            this.
+            (node);
             document.querySelector('.breadth-search-container .reachable .reachable-list').innerHTML = JSON.stringify(this.reachable);
 
             previousNode = node;
@@ -66,7 +67,7 @@ class BFS {
         return this.reachable.shift();
     }
 
-    getAdjacent(node, previousNode) {
+    getAdjacent(node) {
         let adjacentNodes = [];
         if (node.x - 1 > 0 ) { //!this.wallNodes.includes(node)
             adjacentNodes.push({x: node.x - 1, y: node.y});
