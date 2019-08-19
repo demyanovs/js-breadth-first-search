@@ -165,8 +165,7 @@ class BFS {
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 
-    static disableControls(disabled = true)
-    {
+    static disableControls(disabled = true) {
         document.querySelector('#start-button').disabled = disabled;
     }
 
@@ -187,11 +186,11 @@ class BFS {
 }
 
 function start() {
-    let x_start = parseInt(document.getElementById('x_start').value),
-        y_start = parseInt(document.getElementById('y_start').value),
-        x_goal = parseInt(document.getElementById('x_goal').value),
-        y_goal = parseInt(document.getElementById('y_goal').value);
-    const map = new BFS({x: x_start,y: y_start}, {x: x_goal, y: y_goal});
+    let xStart = parseInt(document.getElementById('x_start').value),
+        yStart = parseInt(document.getElementById('y_start').value),
+        xGoal = parseInt(document.getElementById('x_goal').value),
+        yGoal = parseInt(document.getElementById('y_goal').value);
+    const map = new BFS({x: xStart,y: yStart}, {x: xGoal, y: yGoal});
 }
 
 window.addEventListener("load", () => {
