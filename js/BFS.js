@@ -46,7 +46,7 @@ class BFS {
                 BFS.disableControls(false);
                 return this.buildPath(nodeData);
             }
-            this.explored.push({current: node, previous: nodeData.previous, direction: nodeData.direction});
+            this.explored.push({current: node, previous: nodeData.previous});
             document.querySelector('.breadth-search-container .explored .explored-list').innerHTML = JSON.stringify(this.explored);
 
             if (i > 0) {
@@ -68,7 +68,7 @@ class BFS {
 
     getAdjacent(node) {
         let adjacentNodes = [];
-        if (node.x - 1 > 0 ) { //!this.wallNodes.includes(node)
+        if (node.x - 1 > 0 ) {
             adjacentNodes.push({x: node.x - 1, y: node.y});
         }
         if (node.x + 1 <= this.mapWidth / this.cellSize ) {
